@@ -1,9 +1,24 @@
-var bleno = require('bleno'),
-    _     = require('underscore');
+var events = require('events'),
+    util   = require('util'),
+    bleno  = require('bleno'),
+    _      = require('underscore');
 
 
-// IBeacon class
+/**
+ * Creates an instance of the IBeacon object.
+ * @class
+ * @extends EventEmitter
+ */
 var IBeacon = function () {
+  'user strict';
+
+  //If is not instance of IBeacon return a new instance
+  if (false === (this instanceof IBeacon)) {
+    return new IBeacon();
+  }
+
+  events.EventEmitter.call(this);
+
   // Default service for the IBeacon
   this.service = {
     uiid: '4c1db1b25c614e19bbb3552d8ed90b20',
@@ -15,9 +30,13 @@ var IBeacon = function () {
   return this;
 };
 
+util.inherits(IBeacon, events.EventEmitter);
+
 
 // Create the service based in the default service and the options information
 IBeacon.prototype.setService = function setService (options) {
+  'use strict';
+
   _.extend(this.service, options);
 
   return this;
@@ -25,21 +44,34 @@ IBeacon.prototype.setService = function setService (options) {
 
 
 // Start advertising as IBeacon
-IBeacon.prototype.startAdvertising = function startAdvertising (options) {
+IBeacon.prototype.start = function start (options) {
+  'use strict';
+
+  var _this = this;
+
   if (options) {
     this.setService(options);
   }
 
-  bleno.startAdvertisingIBeacon(this.service.uiid,
-      this.service.major, this.service.minor, this.service.measuredPower,
-    function callback(err) {
-      if (err) {
-        console.log(error);
-      }
+  // Start the bleno advertisment
+  bleno.startAdvertisingIBeacon(
+    this.service.uiid,
+    this.service.major,
+    this.service.minor,
+    this.service.measuredPower,
+    function ardvertisingCallback (err) {
 
-      console.log('Start advertising as IBeacon with UIID: %s', this.service.uiid);
-    }.bind(this));
+      if (err) {
+        _this.emit('error', err);
+
+      } else {
+        _this.emit('ready', _this);
+      }
+   });
+
+  return this;
 };
+
 
 exports = module.exports = IBeacon;
 
