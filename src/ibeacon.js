@@ -67,7 +67,7 @@ IBeacon.prototype.start = function start (options) {
         _this.emit('error', err);
       }
 
-      _this.emit('ready');
+      console.log('Edison IBeacon UUID is %s', _this.service.uuid);
    });
 
   return this;

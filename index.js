@@ -7,10 +7,6 @@ var IBeacon     = require('./src/ibeacon'),
 // Satart ibeacon
 ibeacon.start();
 
-ibeacon.on('ready', function () {
-  console.log('Edison IBeacon UUID is %s', ibeacon.service.uuid);
-});
-
 ibeacon.on('error', function (err) {
   console.error(err);
 });
