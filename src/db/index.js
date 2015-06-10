@@ -22,7 +22,9 @@ DB.prototype.save = function (data, callback) {
   'use strict';
 
   dweetio.dweet_for('beacon-tracker', data, function (err, dweet) {
-    callback();
+    if (callback) {
+      callback();
+    }
   });
 };
 

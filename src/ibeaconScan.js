@@ -1,7 +1,12 @@
-var noble  = require('noble'),
-    _      = require('underscore'),
-    events = require('events'),
-    util   = require('util');
+var noble   = require('noble'),
+    _       = require('underscore'),
+    events  = require('events'),
+    util    = require('util'),
+    grove   = require('jsupm_grove'),
+    DB      = require('./db'),
+    Display = require('./display'),
+    db      = new DB(),
+    display = new Display();
 
 
 /**
@@ -24,11 +29,26 @@ var IBeaconScan = function IBeaconScan () {
     duplicated: true
   }
 
+  this.ibeacons = [];
+  this.temperature = new grove.GroveTemp(0);
+
+  // Start the display
+  display.start();
+
   return this;
 };
 
 util.inherits(IBeaconScan, events.EventEmitter);
 
+
+IBeaconScan.prototype.toObject = function toObject () {
+  'use strict';
+
+  return {
+    temperature: this.temperature.value(),
+    ibeacons: this.ibeacons
+  }
+};
 
 // Set beacon reader device options
 IBeaconScan.prototype.setOptions = function setOptions (options) {
@@ -97,6 +117,47 @@ IBeaconScan.prototype.start = function scan (options) {
   });
 
   return this;
+};
+
+// Check if the beacon is in the range
+IBeaconScan.prototype.check = function check (ibeacon) {
+  'use strict';
+
+  if (ibeacon.distance < 1) {
+    this.addToList(ibeacon);
+
+  } else {
+    this.removeFromList(ibeacon);
+  }
+};
+
+
+// Add beacon to list and save
+IBeaconScan.prototype.addToList = function addToList (ibeacon) {
+  'use strict';
+
+  var uuids = _.pluck(this.ibeacons, 'uuid');
+
+  if (uuids.indexOf(ibeacon.uuid) === -1) {
+    this.ibeacons.push(ibeacon);
+    db.save(this.toObject());
+  }
+
+  display.update(this.temperature.value(), this.ibeacons.length);
+};
+
+
+// Remove beacon from list and save
+IBeaconScan.prototype.removeFromList = function removeFromList (ibeacon) {
+  var uuids = _.pluck(this.ibeacons, 'uuid'),
+      index = uuids.indexOf(ibeacon.uuid);
+
+  if (index !== -1) {
+    this.ibeacons.splice(index, 1);
+    db.save(this.toObject());
+  }
+
+  display.update(this.temperature.value(), this.ibeacons.length);
 };
 
 
