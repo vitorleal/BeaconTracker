@@ -55,11 +55,11 @@ IBeacon.prototype.start = function start (options) {
 
   // Start the bleno advertisment
   bleno.startAdvertisingIBeacon(
-    this.service.uiid,
-    this.service.major,
-    this.service.minor,
-    this.service.measuredPower,
-    function ardvertisingCallback (err) {
+    _this.service.uiid,
+    _this.service.major,
+    _this.service.minor,
+    _this.service.measuredPower,
+    function ibeaconArdvertisingCallback (err) {
 
       if (err) {
         _this.emit('error', err);

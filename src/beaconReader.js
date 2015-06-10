@@ -9,10 +9,9 @@ var BeaconReader = function BeaconReader () {
   this.noble = noble;
 
   this.device = {
-    ids: [],
+    id: 'f84e5bbf8951',
     duplicated: true
   }
-
 
   return this;
 };
@@ -30,9 +29,35 @@ BeaconReader.prototype.setOptions = function setOptions (options) {
 };
 
 
+// Calculate the distance
+BeaconReader.prototype.calculateDistance = function calculateDistance (rssi) {
+  var txPower = -59,
+      _toFixed = function (num) {
+        return +(Math.round(num + 'e+2')  + 'e-2');
+      };
+
+  if (rssi == 0) {
+    return -1.0;
+  }
+
+  var ratio = rssi * 1.0 / txPower;
+
+  if (ratio < 1.0) {
+    var distance = Math.pow(ratio, 10);
+
+    return _toFixed(distance);
+
+  } else {
+    var distance = (0.89976) * Math.pow(ratio,7.7095) + 0.111;
+    return _toFixed(distance);
+  }
+};
+
+
 // Start scan for IBeacons
 BeaconReader.prototype.scan = function scan (options) {
   'use strict';
+
   var _this = this;
 
   if (options) {
@@ -40,13 +65,12 @@ BeaconReader.prototype.scan = function scan (options) {
   }
 
   // Start scan for the
-  this.noble.on('stateChange', function (state) {
+  this.noble.on('stateChange', function onStateChange (state) {
     if (state === 'poweredOn') {
       _this.noble.startScanning(
-        _this.device.ids,
+        [],
         _this.device.duplicated
       );
-
 
     } else {
       _this.noble.stopScanning();
@@ -54,15 +78,19 @@ BeaconReader.prototype.scan = function scan (options) {
   });
 
   this.noble.on('discover', function onDiscover (peripheral) {
-    var uiid = peripheral.uuid,
-        rssi = peripheral.rssi,
-        name = peripheral.advertisement.localName;
+    if (peripheral.uuid === _this.device.id) {
+      var uiid = peripheral.uuid,
+          rssi = peripheral.rssi,
+          distance = _this.calculateDistance(rssi),
+          name = peripheral.advertisement.localName;
 
-    console.log('found device: ', uiid, ' ', name, ' ', rssi);
+      console.log('found device: %s, name: %s, distance: %s', uiid, name, distance);
+    }
   });
 
   return this;
 };
+
 
 exports = module.exports = BeaconReader;
 
