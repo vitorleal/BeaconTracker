@@ -12,16 +12,18 @@ var events = require('events'),
 var IBeacon = function () {
   'user strict';
 
-  //If is not instance of IBeacon return a new instance
+  // If is not instance of IBeacon return a new instance
   if (false === (this instanceof IBeacon)) {
     return new IBeacon();
   }
 
   events.EventEmitter.call(this);
 
+  this.bleno = bleno;
+
   // Default service for the IBeacon
   this.service = {
-    uiid: '4c1db1b25c614e19bbb3552d8ed90b20',
+    uuid: '4c1db1b25c614e19bbb3552d8ed90b20',
     major: 1,
     minor: 1,
     measuredPower: -59
@@ -54,8 +56,8 @@ IBeacon.prototype.start = function start (options) {
   }
 
   // Start the bleno advertisment
-  bleno.startAdvertisingIBeacon(
-    _this.service.uiid,
+  this.bleno.startAdvertisingIBeacon(
+    _this.service.uuid,
     _this.service.major,
     _this.service.minor,
     _this.service.measuredPower,
@@ -63,10 +65,9 @@ IBeacon.prototype.start = function start (options) {
 
       if (err) {
         _this.emit('error', err);
-
-      } else {
-        _this.emit('ready', _this);
       }
+
+      _this.emit('ready');
    });
 
   return this;

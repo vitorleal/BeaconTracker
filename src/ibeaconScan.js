@@ -1,24 +1,37 @@
-var noble = require('noble'),
-    _     = require('underscore');
+var noble  = require('noble'),
+    _      = require('underscore'),
+    events = require('events'),
+    util   = require('util');
 
 
-// Beacon reader class
-var BeaconReader = function BeaconReader () {
+/**
+ * Creates an instance of the IBeaconScan object.
+ * @class
+ * @extends EventEmitter
+ */
+var IBeaconScan = function IBeaconScan () {
   'use strict';
+
+  // If is not instance of Wearable return a new instance
+  if (false === (this instanceof IBeaconScan)) {
+    return new IBeaconScan();
+  }
 
   this.noble = noble;
 
   this.device = {
-    id: 'f84e5bbf8951',
+    ids: ['f84e5bbf8951'],
     duplicated: true
   }
 
   return this;
 };
 
+util.inherits(IBeaconScan, events.EventEmitter);
+
 
 // Set beacon reader device options
-BeaconReader.prototype.setOptions = function setOptions (options) {
+IBeaconScan.prototype.setOptions = function setOptions (options) {
   'use strict';
 
   if (options) {
@@ -30,7 +43,7 @@ BeaconReader.prototype.setOptions = function setOptions (options) {
 
 
 // Calculate the distance
-BeaconReader.prototype.calculateDistance = function calculateDistance (rssi) {
+IBeaconScan.prototype.calculateDistance = function calculateDistance (rssi) {
   var txPower = -59,
       _toFixed = function (num) {
         return +(Math.round(num + 'e+2')  + 'e-2');
@@ -55,7 +68,7 @@ BeaconReader.prototype.calculateDistance = function calculateDistance (rssi) {
 
 
 // Start scan for IBeacons
-BeaconReader.prototype.scan = function scan (options) {
+IBeaconScan.prototype.start = function scan (options) {
   'use strict';
 
   var _this = this;
@@ -78,13 +91,8 @@ BeaconReader.prototype.scan = function scan (options) {
   });
 
   this.noble.on('discover', function onDiscover (peripheral) {
-    if (peripheral.uuid === _this.device.id) {
-      var uiid = peripheral.uuid,
-          rssi = peripheral.rssi,
-          distance = _this.calculateDistance(rssi),
-          name = peripheral.advertisement.localName;
-
-      console.log('found device: %s, name: %s, distance: %s', uiid, name, distance);
+    if (_this.device.ids.indexOf(peripheral.uuid) !== -1) {
+      _this.emit('discover', peripheral);
     }
   });
 
@@ -92,5 +100,5 @@ BeaconReader.prototype.scan = function scan (options) {
 };
 
 
-exports = module.exports = BeaconReader;
+exports = module.exports = IBeaconScan;
 
