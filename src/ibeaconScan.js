@@ -29,16 +29,12 @@ var IBeaconScan = function IBeaconScan () {
     duplicated: true
   }
 
+  this.showAll = true;
   this.ibeacons = [];
   this.temperature = new grove.GroveTemp(0);
 
   // Start the display
   display.start();
-
-  // On uncaught exception kill process
-  process.on('uncaughtException', function (err) {
-    display.defaultScreen();
-  });
 
   // On exit
   process.on('SIGINT', function() {
@@ -127,9 +123,15 @@ IBeaconScan.prototype.start = function scan (options) {
   });
 
   this.noble.on('discover', function onDiscover (peripheral) {
-    if (_this.device.ids.indexOf(peripheral.uuid) !== -1) {
-      _this.emit('discover', peripheral);
+    if (_this.showAll) {
+       _this.emit('discover', peripheral);
+
+    } else {
+      if (_this.device.ids.indexOf(peripheral.uuid) !== -1) {
+        _this.emit('discover', peripheral);
+      }
     }
+
   });
 
   return this;
