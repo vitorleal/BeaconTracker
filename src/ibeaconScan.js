@@ -35,18 +35,34 @@ var IBeaconScan = function IBeaconScan () {
   // Start the display
   display.start();
 
+  // On uncaught exception kill process
+  process.on('uncaughtException', function (err) {
+    display.defaultScreen();
+  });
+
+  // On exit
+  process.on('SIGINT', function() {
+    display.defaultScreen();
+    process.exit();
+  });
+
   return this;
 };
 
 util.inherits(IBeaconScan, events.EventEmitter);
 
 
+// Get info as object to use in the save method
 IBeaconScan.prototype.toObject = function toObject () {
   'use strict';
 
   return {
     temperature: this.temperature.value(),
-    ibeacons: this.ibeacons
+    ibeacons: this.ibeacons,
+    location: {
+      lat: -23.5957039,
+      lon: -46.6753629
+    }
   }
 };
 

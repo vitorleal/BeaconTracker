@@ -18,11 +18,17 @@ Display.prototype.start = function Diplay () {
   'use strict';
 
   display.set(2, 16);
-  display.setColor('green')
 
-  display.write(['BeaconTracker', '----------------']);
+  this.defaultScreen();
 };
 
+// Default screen
+Display.prototype.defaultScreen = function defaultScreen () {
+  'use strict';
+
+  display.setColor('green')
+  display.write(['BeaconTracker', '----------------']);
+};
 
 // Update display
 Display.prototype.update = function update (temperature, ibeacons) {
