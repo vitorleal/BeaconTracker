@@ -68,7 +68,7 @@ IBeacon.prototype.start = function start (options) {
       }
 
       console.log('Edison IBeacon UUID is %s', _this.service.uuid);
-   });
+    });
 
   return this;
 };

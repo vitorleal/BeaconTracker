@@ -27,7 +27,7 @@ var IBeaconScan = function IBeaconScan () {
   this.device = {
     ids: ['f84e5bbf8951'],
     duplicated: true
-  }
+  };
 
   this.showAll = true;
   this.ibeacons = [];
@@ -59,7 +59,7 @@ IBeaconScan.prototype.toObject = function toObject () {
       lat: -23.5957039,
       lon: -46.6753629
     }
-  }
+  };
 };
 
 // Set beacon reader device options
@@ -81,7 +81,7 @@ IBeaconScan.prototype.calculateDistance = function calculateDistance (rssi) {
         return +(Math.round(num + 'e+2')  + 'e-2');
       };
 
-  if (rssi == 0) {
+  if (rssi === 0) {
     return -1.0;
   }
 
@@ -112,10 +112,7 @@ IBeaconScan.prototype.start = function scan (options) {
   // Start scan for the
   this.noble.on('stateChange', function onStateChange (state) {
     if (state === 'poweredOn') {
-      _this.noble.startScanning(
-        [],
-        _this.device.duplicated
-      );
+      _this.noble.startScanning([], _this.device.duplicated);
 
     } else {
       _this.noble.stopScanning();
@@ -124,7 +121,7 @@ IBeaconScan.prototype.start = function scan (options) {
 
   this.noble.on('discover', function onDiscover (peripheral) {
     if (_this.showAll) {
-       _this.emit('discover', peripheral);
+      _this.emit('discover', peripheral);
 
     } else {
       if (_this.device.ids.indexOf(peripheral.uuid) !== -1) {

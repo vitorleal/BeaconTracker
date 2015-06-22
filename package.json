@@ -1,5 +1,5 @@
 {
-  "name": "intel-roadshow-2015",
+  "name": "BeaconTracker",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vitorleal/intel-roadshow-2015.git"
+    "url": "https://github.com/vitorleal/BeaconTracker.git"
   },
   "author": "Vitor Leal <vitorleal1@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vitorleal/intel-roadshow-2015/issues"
+    "url": "https://github.com/vitorleal/BeaconTracker/issues"
   },
-  "homepage": "https://github.com/vitorleal/intel-roadshow-2015"
+  "homepage": "https://github.com/vitorleal/BeaconTracker"
 }
