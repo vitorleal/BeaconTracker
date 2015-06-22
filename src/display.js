@@ -1,8 +1,12 @@
-var display     = require('intel-edison-lcd-rgb-backlight-display-helper'),
-    util        = require('util'),
-    format      = util.format;
+var display = require('intel-edison-lcd-rgb-backlight-display-helper'),
+    util    = require('util'),
+    format  = util.format;
 
-
+/**
+ * Creates an instance of the Display object.
+ * @class
+ * @extends EventEmitter
+ */
 var Display = function Display () {
   'use strict';
 
@@ -14,7 +18,7 @@ var Display = function Display () {
 
 
 // Start display
-Display.prototype.start = function Diplay () {
+Display.prototype.start = function start () {
   'use strict';
 
   display.set(2, 16);
@@ -26,7 +30,7 @@ Display.prototype.start = function Diplay () {
 Display.prototype.defaultScreen = function defaultScreen () {
   'use strict';
 
-  display.setColor('green')
+  display.setColor('green');
   display.write(['BeaconTracker', '----------------']);
 };
 
@@ -35,10 +39,10 @@ Display.prototype.update = function update (temperature, ibeacons) {
   'use strict';
 
   if (temperature > 26) {
-    display.setColor('red')
+    display.setColor('red');
 
   } else if (temperature < 20) {
-    display.setColor('yellow')
+    display.setColor('yellow');
 
   } else {
     display.setColor('blue');
