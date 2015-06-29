@@ -3,13 +3,12 @@ var events = require('events'),
     bleno  = require('bleno'),
     _      = require('underscore');
 
-
 /**
  * Creates an instance of the IBeacon object.
  * @class
  * @extends EventEmitter
  */
-var IBeacon = function () {
+var IBeacon = function() {
   'user strict';
 
   // If is not instance of IBeacon return a new instance
@@ -34,9 +33,8 @@ var IBeacon = function () {
 
 util.inherits(IBeacon, events.EventEmitter);
 
-
 // Create the service based in the default service and the options information
-IBeacon.prototype.setService = function setService (options) {
+IBeacon.prototype.setService = function setService(options) {
   'use strict';
 
   _.extend(this.service, options);
@@ -44,9 +42,8 @@ IBeacon.prototype.setService = function setService (options) {
   return this;
 };
 
-
 // Start advertising as IBeacon
-IBeacon.prototype.start = function start (options) {
+IBeacon.prototype.start = function start(options) {
   'use strict';
 
   var _this = this;
@@ -61,7 +58,7 @@ IBeacon.prototype.start = function start (options) {
     _this.service.major,
     _this.service.minor,
     _this.service.measuredPower,
-    function ibeaconArdvertisingCallback (err) {
+    function ibeaconArdvertisingCallback(err) {
 
       if (err) {
         _this.emit('error', err);
@@ -72,7 +69,6 @@ IBeacon.prototype.start = function start (options) {
 
   return this;
 };
-
 
 exports = module.exports = IBeacon;
 

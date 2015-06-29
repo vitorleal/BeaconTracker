@@ -8,13 +8,12 @@ var noble   = require('noble'),
     db      = new DB(),
     display = new Display();
 
-
 /**
  * Creates an instance of the IBeaconScan object.
  * @class
  * @extends EventEmitter
  */
-var IBeaconScan = function IBeaconScan () {
+var IBeaconScan = function IBeaconScan() {
   'use strict';
 
   // If is not instance of Wearable return a new instance
@@ -47,9 +46,8 @@ var IBeaconScan = function IBeaconScan () {
 
 util.inherits(IBeaconScan, events.EventEmitter);
 
-
 // Get info as object to use in the save method
-IBeaconScan.prototype.toObject = function toObject () {
+IBeaconScan.prototype.toObject = function toObject() {
   'use strict';
 
   return {
@@ -63,7 +61,7 @@ IBeaconScan.prototype.toObject = function toObject () {
 };
 
 // Set beacon reader device options
-IBeaconScan.prototype.setOptions = function setOptions (options) {
+IBeaconScan.prototype.setOptions = function setOptions(options) {
   'use strict';
 
   if (options) {
@@ -73,11 +71,10 @@ IBeaconScan.prototype.setOptions = function setOptions (options) {
   return this;
 };
 
-
 // Calculate the distance
-IBeaconScan.prototype.calculateDistance = function calculateDistance (rssi) {
+IBeaconScan.prototype.calculateDistance = function calculateDistance(rssi) {
   var txPower = -59,
-      _toFixed = function (num) {
+      _toFixed = function(num) {
         return +(Math.round(num + 'e+2')  + 'e-2');
       };
 
@@ -93,14 +90,13 @@ IBeaconScan.prototype.calculateDistance = function calculateDistance (rssi) {
     return _toFixed(distance);
 
   } else {
-    var distance = (0.89976) * Math.pow(ratio,7.7095) + 0.111;
+    var distance = (0.89976) * Math.pow(ratio, 7.7095) + 0.111;
     return _toFixed(distance);
   }
 };
 
-
 // Start scan for IBeacons
-IBeaconScan.prototype.start = function scan (options) {
+IBeaconScan.prototype.start = function scan(options) {
   'use strict';
 
   var _this = this;
@@ -110,7 +106,7 @@ IBeaconScan.prototype.start = function scan (options) {
   }
 
   // Start scan for the
-  this.noble.on('stateChange', function onStateChange (state) {
+  this.noble.on('stateChange', function onStateChange(state) {
     if (state === 'poweredOn') {
       _this.noble.startScanning([], _this.device.duplicated);
 
@@ -119,7 +115,7 @@ IBeaconScan.prototype.start = function scan (options) {
     }
   });
 
-  this.noble.on('discover', function onDiscover (peripheral) {
+  this.noble.on('discover', function onDiscover(peripheral) {
     if (_this.showAll) {
       _this.emit('discover', peripheral);
 
@@ -135,7 +131,7 @@ IBeaconScan.prototype.start = function scan (options) {
 };
 
 // Check if the beacon is in the range
-IBeaconScan.prototype.check = function check (ibeacon) {
+IBeaconScan.prototype.check = function check(ibeacon) {
   'use strict';
 
   if (ibeacon.distance < 1) {
@@ -146,9 +142,8 @@ IBeaconScan.prototype.check = function check (ibeacon) {
   }
 };
 
-
 // Add beacon to list and save
-IBeaconScan.prototype.addToList = function addToList (ibeacon) {
+IBeaconScan.prototype.addToList = function addToList(ibeacon) {
   'use strict';
 
   var uuids = _.pluck(this.ibeacons, 'uuid');
@@ -161,9 +156,8 @@ IBeaconScan.prototype.addToList = function addToList (ibeacon) {
   display.update(this.temperature.value(), this.ibeacons.length);
 };
 
-
 // Remove beacon from list and save
-IBeaconScan.prototype.removeFromList = function removeFromList (ibeacon) {
+IBeaconScan.prototype.removeFromList = function removeFromList(ibeacon) {
   var uuids = _.pluck(this.ibeacons, 'uuid'),
       index = uuids.indexOf(ibeacon.uuid);
 
@@ -174,7 +168,6 @@ IBeaconScan.prototype.removeFromList = function removeFromList (ibeacon) {
 
   display.update(this.temperature.value(), this.ibeacons.length);
 };
-
 
 exports = module.exports = IBeaconScan;
 

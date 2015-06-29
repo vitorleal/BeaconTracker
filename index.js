@@ -3,18 +3,17 @@ var IBeacon     = require('./src/ibeacon'),
     ibeacon     = new IBeacon(),
     ibeaconScan = new IBeaconScan();
 
-
 // Satart ibeacon
 ibeacon.start();
 
-ibeacon.on('error', function (err) {
+ibeacon.on('error', function(err) {
   console.error(err);
 });
 
 // Start beacon scan
 ibeaconScan.start();
 
-ibeaconScan.on('discover', function (beacon) {
+ibeaconScan.on('discover', function(beacon) {
   var newBeacon = {
     uuid: beacon.uuid,
     rssi: beacon.rssi,

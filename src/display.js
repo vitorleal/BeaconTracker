@@ -7,7 +7,7 @@ var display = require('intel-edison-lcd-rgb-backlight-display-helper'),
  * @class
  * @extends EventEmitter
  */
-var Display = function Display () {
+var Display = function Display() {
   'use strict';
 
   // If is not instance of Display return a new instance
@@ -16,9 +16,8 @@ var Display = function Display () {
   }
 };
 
-
 // Start display
-Display.prototype.start = function start () {
+Display.prototype.start = function start() {
   'use strict';
 
   display.set(2, 16);
@@ -27,7 +26,7 @@ Display.prototype.start = function start () {
 };
 
 // Default screen
-Display.prototype.defaultScreen = function defaultScreen () {
+Display.prototype.defaultScreen = function defaultScreen() {
   'use strict';
 
   display.setColor('green');
@@ -35,7 +34,7 @@ Display.prototype.defaultScreen = function defaultScreen () {
 };
 
 // Update display
-Display.prototype.update = function update (temperature, ibeacons) {
+Display.prototype.update = function update(temperature, ibeacons) {
   'use strict';
 
   if (temperature > 26) {
@@ -53,7 +52,6 @@ Display.prototype.update = function update (temperature, ibeacons) {
     format('IBeacons: %s', ibeacons)
   ]);
 };
-
 
 exports = module.exports = Display;
 
