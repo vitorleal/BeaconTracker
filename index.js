@@ -18,7 +18,7 @@ ibeaconScan.on('discover', function(beacon) {
     uuid: beacon.uuid,
     rssi: beacon.rssi,
     distance: ibeaconScan.calculateDistance(beacon.rssi)
-  }
+  };
 
   ibeaconScan.check(newBeacon);
 

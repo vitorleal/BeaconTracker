@@ -73,7 +73,9 @@ IBeaconScan.prototype.setOptions = function setOptions(options) {
 
 // Calculate the distance
 IBeaconScan.prototype.calculateDistance = function calculateDistance(rssi) {
-  var txPower = -59,
+  'use strict';
+
+  var txPower  = -59,
       _toFixed = function(num) {
         return +(Math.round(num + 'e+2')  + 'e-2');
       };
@@ -82,15 +84,15 @@ IBeaconScan.prototype.calculateDistance = function calculateDistance(rssi) {
     return -1.0;
   }
 
-  var ratio = rssi * 1.0 / txPower;
+  var ratio = rssi * 1.0 / txPower,
+      distance;
 
   if (ratio < 1.0) {
-    var distance = Math.pow(ratio, 10);
-
+    distance = Math.pow(ratio, 10);
     return _toFixed(distance);
 
   } else {
-    var distance = (0.89976) * Math.pow(ratio, 7.7095) + 0.111;
+    distance = (0.89976) * Math.pow(ratio, 7.7095) + 0.111;
     return _toFixed(distance);
   }
 };
